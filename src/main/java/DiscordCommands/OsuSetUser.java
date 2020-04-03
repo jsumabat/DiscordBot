@@ -10,8 +10,7 @@ import com.oopsjpeg.osu4j.backend.EndpointUsers;
 import com.oopsjpeg.osu4j.backend.Osu;
 import com.oopsjpeg.osu4j.exception.OsuAPIException;
 
-import java.io.File;
-import java.io.IOException;
+import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.List;
@@ -66,13 +65,12 @@ public class OsuSetUser extends Command {
 
         ObjectMapper mapper = new ObjectMapper();
         try {
-            mapper.writeValue(new File("accounts.json"), account);
+            mapper.writeValue(new PrintWriter(new BufferedWriter(new FileWriter("accounts.json", true))), account);
             event.replySuccess("Success!");
         } catch (IOException e) {
             e.printStackTrace();
         }
 
     }
-
 
 }
