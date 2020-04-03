@@ -1,5 +1,8 @@
 package Utils;
 
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
+
+@JsonPropertyOrder({"discordId", "osuId", "osuUsername"})
 public class DiscordOsu {
 
     private String discordId;
