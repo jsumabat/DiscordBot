@@ -54,9 +54,9 @@ public class OsuSetUser extends Command {
         OsuUser user = null;
         try {
             user = osu.users.query(new EndpointUsers.ArgumentsBuilder(osuUsername).setMode(GameMode.STANDARD).build());
-        } catch (OsuAPIException e) {
+        } catch (Exception e) {
             event.replyError("Could not find this osu! username.");
-            e.printStackTrace();
+//            e.printStackTrace();
         }
 
         int osuId = user.getID();
