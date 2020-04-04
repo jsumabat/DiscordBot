@@ -1,17 +1,16 @@
 import DiscordCommands.OsuSetUser;
+import Utils.DiscordOsu;
 import com.jagrosh.jdautilities.command.CommandClientBuilder;
 import com.jagrosh.jdautilities.commons.waiter.EventWaiter;
-import net.dv8tion.jda.api.AccountType;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
-import net.dv8tion.jda.api.OnlineStatus;
-import net.dv8tion.jda.api.entities.Activity;
 
 import javax.security.auth.login.LoginException;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.List;
+import java.util.Scanner;
 
 public class Main {
 
@@ -37,6 +36,13 @@ public class Main {
                 new OsuSetUser()
         );
 
+//        DiscordOsu.load();
+
         JDA bot = JDABuilder.createDefault(token).addEventListeners(waiter, client.build()).build();
+
+        Scanner sc = new Scanner(System.in);
+        if(sc.next().equals("exit")) {
+            DiscordOsu.save();
+        }
     }
 }

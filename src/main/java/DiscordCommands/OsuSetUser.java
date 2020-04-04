@@ -1,14 +1,12 @@
 package DiscordCommands;
 
 import Utils.DiscordOsu;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.jagrosh.jdautilities.command.Command;
 import com.jagrosh.jdautilities.command.CommandEvent;
 import com.oopsjpeg.osu4j.GameMode;
 import com.oopsjpeg.osu4j.OsuUser;
 import com.oopsjpeg.osu4j.backend.EndpointUsers;
 import com.oopsjpeg.osu4j.backend.Osu;
-import com.oopsjpeg.osu4j.exception.OsuAPIException;
 
 import java.io.*;
 import java.nio.file.Files;
@@ -20,12 +18,13 @@ public class OsuSetUser extends Command {
     public OsuSetUser() {
         this.name = "osuset";
         this.help = "Link osu! profile to Discord account";
-        this.arguments = "<item> <item> ...";
+        this.arguments = "<username>";
         this.guildOnly = false;
     }
 
     @Override
     public void execute(CommandEvent event) {
+        // check if they inputted a username
         if(event.getArgs().isEmpty()) {
             event.replyWarning("No osu! username was inputted!");
             return;
@@ -33,6 +32,8 @@ public class OsuSetUser extends Command {
         String discordId = event.getAuthor().getId();
         String[] arg = event.getArgs().split("\\s+");
         String osuUsername = "";
+
+        // parse their osu username if it's more than one word
         if(arg.length == 1) {
             osuUsername = arg[0];
         } else {
@@ -50,6 +51,7 @@ public class OsuSetUser extends Command {
             e.printStackTrace();
         }
 
+        // query for their osu! ID
         Osu osu = Osu.getAPI(info.get(1));
         OsuUser user = null;
         try {
@@ -60,14 +62,14 @@ public class OsuSetUser extends Command {
         }
 
         int osuId = user.getID();
+        osuUsername = user.getUsername();
 
-        DiscordOsu account = new DiscordOsu(discordId, osuUsername, osuId);
+        DiscordOsu account = new DiscordOsu(discordId, osuId, osuUsername);
 
-        ObjectMapper mapper = new ObjectMapper();
         try {
-            mapper.writeValue(new PrintWriter(new BufferedWriter(new FileWriter("accounts.json", true))), account);
+            DiscordOsu.update(discordId, osuId, osuUsername);
             event.replySuccess("Success!");
-        } catch (IOException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
 
