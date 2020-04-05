@@ -36,13 +36,15 @@ public class Main {
                 new OsuSetUser()
         );
 
-//        DiscordOsu.load();
+        DiscordOsu.load();
 
         JDA bot = JDABuilder.createDefault(token).addEventListeners(waiter, client.build()).build();
 
-        Scanner sc = new Scanner(System.in);
-        if(sc.next().equals("exit")) {
-            DiscordOsu.save();
-        }
+        Runtime.getRuntime().addShutdownHook(new Thread(new Runnable() {
+            public void run() {
+                DiscordOsu.save();
+                bot.shutdown();
+            }
+        }));
     }
 }
