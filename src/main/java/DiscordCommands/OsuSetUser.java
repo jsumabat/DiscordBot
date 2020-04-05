@@ -1,7 +1,7 @@
 package DiscordCommands;
 
+import Utils.Configuration;
 import Utils.DiscordOsu;
-import Utils.Pair;
 import Utils.RateLimiter;
 import com.jagrosh.jdautilities.command.Command;
 import com.jagrosh.jdautilities.command.CommandEvent;
@@ -9,12 +9,6 @@ import com.oopsjpeg.osu4j.GameMode;
 import com.oopsjpeg.osu4j.OsuUser;
 import com.oopsjpeg.osu4j.backend.EndpointUsers;
 import com.oopsjpeg.osu4j.backend.Osu;
-
-import java.io.*;
-import java.nio.file.Files;
-import java.nio.file.Paths;
-import java.util.HashMap;
-import java.util.List;
 
 public class OsuSetUser extends Command {
 
@@ -60,15 +54,8 @@ public class OsuSetUser extends Command {
             }
         }
 
-        List<String> info = null;
-        try {
-            info = Files.readAllLines(Paths.get("config.txt"));
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
         // query for their osu! ID
-        Osu osu = Osu.getAPI(info.get(1));
+        Osu osu = Osu.getAPI(Configuration.getOsuApiKey());
         OsuUser user = null;
         try {
             user = osu.users.query(new EndpointUsers.ArgumentsBuilder(osuUsername).setMode(GameMode.STANDARD).build());
