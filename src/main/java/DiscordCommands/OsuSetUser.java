@@ -28,15 +28,15 @@ public class OsuSetUser extends Command {
     @Override
     public void execute(CommandEvent event) {
         // Do not respond to bots
-        if(event.getAuthor().isBot()){
+        if(event.getAuthor().isBot()) {
             return;
         }
 
         // command rate limit
         long uid = event.getAuthor().getIdLong();
         int rTime = RateLimiter.CheckUserRateLimit(uid, RateLimiter.RateLimitLevel.RATE_LIMIT_LEVEL_EXPONENTIAL);
-        if(rTime > 0){
-            event.replyWarning("Please wait " + String.format("%.1f",rTime / 1000.0) + " second(s) before executing this command again!");
+        if(rTime > 0) {
+            event.replyWarning("Please wait " + String.format("%.1f", rTime / 1000.0) + " second(s) before executing this command again!");
             return;
         }
 
