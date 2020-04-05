@@ -61,6 +61,7 @@ public class DiscordOsu {
         } catch (Exception e) {
             e.printStackTrace();
         }
+        System.out.println(ColorConstants.ANSI_BLUE + "Loaded!" + ColorConstants.ANSI_RESET);
     }
 
     @SuppressWarnings("unchecked")
@@ -82,6 +83,8 @@ public class DiscordOsu {
         } catch (Exception e) {
             e.printStackTrace();
         }
+
+        System.out.println(ColorConstants.ANSI_BLUE + "Saved!" + ColorConstants.ANSI_RESET);
     }
 
     public String toString() {
