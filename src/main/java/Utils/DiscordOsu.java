@@ -63,6 +63,7 @@ public class DiscordOsu {
         }
     }
 
+    @SuppressWarnings("unchecked")
     public static void save() {
         ArrayList<JSONObject> arr = new ArrayList<JSONObject>();
         for(Map.Entry<String, Pair<Integer, String>> x : DiscordOsu.accounts.entrySet()) {
@@ -74,9 +75,7 @@ public class DiscordOsu {
         }
 
         JSONArray accountList = new JSONArray();
-        for(JSONObject x : arr) {
-            accountList.add(x);
-        }
+        accountList.addAll(arr);
 
         try(FileWriter file = new FileWriter("accounts.json")) {
             file.write(accountList.toJSONString());
