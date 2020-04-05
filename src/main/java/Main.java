@@ -1,4 +1,5 @@
 import DiscordCommands.OsuSetUser;
+import DiscordCommands.Ping;
 import Utils.DiscordOsu;
 import com.jagrosh.jdautilities.command.CommandClientBuilder;
 import com.jagrosh.jdautilities.commons.waiter.EventWaiter;
@@ -33,6 +34,7 @@ public class Main {
         client.setPrefix("!");
 
         client.addCommands(
+                new Ping(),
                 new OsuSetUser()
         );
 
