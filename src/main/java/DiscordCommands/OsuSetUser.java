@@ -1,6 +1,7 @@
 package DiscordCommands;
 
 import Utils.DiscordOsu;
+import Utils.Pair;
 import com.jagrosh.jdautilities.command.Command;
 import com.jagrosh.jdautilities.command.CommandEvent;
 import com.oopsjpeg.osu4j.GameMode;
@@ -11,19 +12,48 @@ import com.oopsjpeg.osu4j.backend.Osu;
 import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.HashMap;
 import java.util.List;
 
 public class OsuSetUser extends Command {
+
+    private HashMap<Long, Pair<Long, Integer>> rateLimitMap;
 
     public OsuSetUser() {
         this.name = "osuset";
         this.help = "Link osu! profile to Discord account";
         this.arguments = "<username>";
         this.guildOnly = false;
+        this.rateLimitMap = new HashMap<>();
     }
 
     @Override
     public void execute(CommandEvent event) {
+        // Do not respond to bots
+        if(event.getAuthor().isBot()){
+            return;
+        }
+
+        // command rate limit
+        long uid = event.getAuthor().getIdLong();
+        if(rateLimitMap.containsKey(uid)){
+            long tDiff = System.currentTimeMillis() - rateLimitMap.get(uid).getFirst();
+            int punishment = rateLimitMap.get(uid).getSecond();
+            System.out.println(punishment);
+            if(tDiff <= Math.pow(2, punishment) * 1000){
+                event.replyWarning("Please wait " + ((int)Math.pow(2, punishment) - tDiff / 1000) + " second(s) before executing this command again!");
+                if(punishment < 6){
+                    rateLimitMap.put(uid, new Pair<>(System.currentTimeMillis(), punishment+1));
+                }
+                return;
+            }else{
+                rateLimitMap.put(uid, new Pair<>(System.currentTimeMillis(), 0));
+            }
+        }else{
+            // Should be ok to just keep users indefinitely until the bot shuts down
+            rateLimitMap.put(uid, new Pair<>(System.currentTimeMillis(), 0));
+        }
+
         // check if they inputted a username
         if(event.getArgs().isEmpty()) {
             event.replyWarning("No osu! username was inputted!");
