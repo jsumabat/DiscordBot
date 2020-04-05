@@ -1,6 +1,8 @@
 package DiscordCommands;
 
 import Utils.DiscordOsu;
+import Utils.Pair;
+import Utils.RateLimiter;
 import com.jagrosh.jdautilities.command.Command;
 import com.jagrosh.jdautilities.command.CommandEvent;
 import com.oopsjpeg.osu4j.GameMode;
@@ -11,6 +13,7 @@ import com.oopsjpeg.osu4j.backend.Osu;
 import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.HashMap;
 import java.util.List;
 
 public class OsuSetUser extends Command {
@@ -24,6 +27,19 @@ public class OsuSetUser extends Command {
 
     @Override
     public void execute(CommandEvent event) {
+        // Do not respond to bots
+        if(event.getAuthor().isBot()){
+            return;
+        }
+
+        // command rate limit
+        long uid = event.getAuthor().getIdLong();
+        int rTime = RateLimiter.CheckUserRateLimit(uid, RateLimiter.RateLimitLevel.RATE_LIMIT_LEVEL_EXPONENTIAL);
+        if(rTime > 0){
+            event.replyWarning("Please wait " + String.format("%.1f",rTime / 1000.0) + " second(s) before executing this command again!");
+            return;
+        }
+
         // check if they inputted a username
         if(event.getArgs().isEmpty()) {
             event.replyWarning("No osu! username was inputted!");
